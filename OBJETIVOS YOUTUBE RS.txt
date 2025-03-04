@@ -1,0 +1,21 @@
+The objective of this work is to develop a video recommendation system based on YouTube trend data. Since we do not have user data in the dataset, we can focus on content-based recommendation systems or general trends.
+
+Popularity-based Recommendation: Identify and suggest videos with the greatest impact through metrics such as the number of views, likes, and comments, prioritizing those with a high level of interaction.
+
+Content Similarity-based Recommendation: Analyze the topics and categories of the videos using video tags, employing text processing techniques to identify and recommend similar content.
+
+Identify high-interaction videos and recommend related content.
+
+Create an engagement score metric by combining likes, views, and comments to detect highly engaging videos and recommend similar content.
+
+Recommendation based on similar channels: If a user has watched a video from a channel, we can recommend content from channels with a high engagement score or similar channels based on content similarity (e.g., tags).
+
+Filter irrelevant videos*: Prioritize videos with high engagement and exclude those with low interaction or that are irrelevant. *This is more complex to do but we will see.
+
+Make recommendations by country of origin: For instance, if a video has been published in Spain, recommend it to users in Spain or at least take it into account in the algorithm.
+
+Process video descriptions and titles to find similarities and make recommendations.
+
+Create categories based on the video content, simulating a tree or network of ideas, so that the recommendation system is more direct.
+
+We have proposed many different options, and later we will filter some based on the available time.
