@@ -5,7 +5,7 @@ import os
 import sys
 from scipy.spatial.distance import pdist, squareform
 
-filePath = os.path.join(os.getcwd(), "dataset", "trending_yt_videos_113_countries.csv")
+filePath = os.path.join(os.getcwd(),"youtube", "dataset", "trending_yt_videos_113_countries.csv")
 data = pd.read_csv(filePath, sep=',')
 
 columns_useful = ['title', 'channel_name', 'view_count', 'like_count', 'comment_count', 
