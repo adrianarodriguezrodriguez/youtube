@@ -16,10 +16,6 @@ Make recommendations by country of origin: For instance, if a video has been pub
 
 Process video descriptions and titles to find similarities and make recommendations.
 
-Create categories based on the video content, simulating a tree or network of ideas, so that the recommendation system is more direct.
-
 Create a neural network to create a recommendation system
 
 Use language sentiment processing to process tags
-
-We have proposed many different options, and later we will filter some based on the available time.

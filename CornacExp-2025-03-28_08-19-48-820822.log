@@ -1,9 +1,0 @@
-
-TEST:
-...
-                       |    RMSE | Train (s) | Test (s)
----------------------- + ------- + --------- + --------
-ItemKNN-Cosine         | 94.9997 |    7.7475 |   0.9738
-ItemKNN-Pearson        | 94.9997 |   11.0339 |   0.9243
-ItemKNN-Pearson-MC     | 94.9997 |    7.8058 |   0.8862
-ItemKNN-AdjustedCosine | 62.1028 |    7.2785 |   0.8772
