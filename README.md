@@ -38,6 +38,12 @@ We have used conda to work on this project, so to ensure everything works as int
 conda env create -f environment.yml
 ```
 
+After the installation is completed, run:
+
+```
+conda activate bigdata
+```
+
 If you cannot access conda, feel free to use the requirements.txt for python environments.
 
 # CONTENTS OF THE PROJECT

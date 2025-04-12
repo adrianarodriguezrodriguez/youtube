@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-import plotly.express as px
 import pandas as pd
 import numpy as np
 import os
@@ -232,33 +230,73 @@ def clustering_with_neighbors(data_tf_df, data, user_sentiment="positive", num_q
 
     return final_features, final_labels
 
-def sil_score(final_features, final_labels, num_queries):
 
-    # Silhouette Score
-    sil_score = silhouette_score(final_features, final_labels)
-    sil_values = silhouette_samples(final_features, final_labels)
+def channel_based_cluster(data):
 
-    # Graphic
-    fig, ax = plt.subplots(figsize=(8, 6))
-    y_lower = 10
+    # We group by channel and join tags from all the videos on the channel
+    tags_por_canal = data.groupby("channel_name")["video_tags"].apply(lambda x: ' '.join(str(v) for v in x.dropna()))
 
-    for i in np.unique(final_labels):
-        ith_values = sil_values[final_labels == i]
-        ith_values.sort()
-        size = len(ith_values)
-        y_upper = y_lower + size
-        ax.fill_betweenx(np.arange(y_lower, y_upper), 0, ith_values, alpha=0.7)
-        ax.text(-0.05, y_lower + 0.5 * size, str(i))
-        y_lower = y_upper + 10
+    # TF-IDF + KMeans
+    ## converts tags to numbers so you can do math with them. TF-IDF gives more weight to "important" words within the channel
+    tfidf = TfidfVectorizer()
+    X = tfidf.fit_transform(tags_por_canal)
+    km = KMeans(n_clusters=5, random_state=42).fit(X)
 
-    ax.axvline(sil_score, color="red", linestyle="--", label=f"Average silhouette : {sil_score:.2f}")
-    ax.set_title(f"Silhouette Plot with {num_queries} clusters of NearestNeighbors")
-    ax.set_xlabel("Silhouette Coefficient")
-    ax.set_ylabel("Group")
-    ax.legend()
-    plt.tight_layout()
-    plt.show()
+    # Asignamos clusters
+    canales_cluster = pd.DataFrame({
+        "channel_name": tags_por_canal.index,
+        "cluster": km.labels_
+    })
 
-    return sil_score
+    return canales_cluster
 
 
+def print_reco_target_cluster(canales_cluster, tags_por_canal, target_cluster):
+    #  We select the target cluster (where there are more channels)
+    cluster_objetivo = target_cluster
+
+    # We filter the channels that belong to that cluster
+    canales_en_cluster = canales_cluster[canales_cluster["cluster"] == cluster_objetivo]
+
+    #  We select a random channel from that cluster
+    canal_elegido = random.choice(canales_en_cluster["channel_name"].values)
+    print(f"Channel automatically chosen from the cluster {cluster_objetivo}: '{canal_elegido}'\n")
+
+    # TF-IDF of the cluster channel tags
+    tags_cluster = tags_por_canal.loc[canales_en_cluster["channel_name"]]
+    tfidf = TfidfVectorizer()
+    X_cluster = tfidf.fit_transform(tags_cluster)
+
+    # Index of the chosen channel
+    index_canal = tags_cluster.index.get_loc(canal_elegido)
+
+    # Cosine similarity between the channel and all others
+    similitudes = cosine_similarity(X_cluster[index_canal], X_cluster).flatten()
+
+    # 
+    TOPK = 10
+    similares_idx = similitudes.argsort()[::-1][1:TOPK+1]
+    canales_similares = tags_cluster.index[similares_idx]
+
+
+    print(f"Channels similars to '{canal_elegido}' in the cluster {cluster_objetivo}:\n")
+    for i, canal in enumerate(canales_similares):
+        print(f"{i+1}. {canal} (similarity: {similitudes[similares_idx[i]]:.2f})")
+
+
+def pca(data):
+    # Select numerical values
+    numerical_features = ['view_count', 'like_count', 'comment_count']
+
+    # Normalize the data
+    scaler = StandardScaler()
+    scaled_data = scaler.fit_transform(data[numerical_features])
+
+    # Apply PCA
+    pca = PCA(n_components=len(numerical_features))  # We use as many components as numeric columns
+    pca_result = pca.fit_transform(scaled_data)
+
+    # Graph of the explained variance
+    explained_variance = pca.explained_variance_ratio_
+
+    return explained_variance
