@@ -33,8 +33,6 @@ from cornac import Experiment
 from cornac.metrics import RMSE
 from cornac.models import ItemKNN
 from cornac.eval_methods import RatioSplit
-from src.utils import initialize_data, calculate_sentiment
-
 
 
 def download_data():
