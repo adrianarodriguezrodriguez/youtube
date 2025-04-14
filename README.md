@@ -51,8 +51,8 @@ If you cannot access conda, feel free to use the requirements.txt for python env
     1. Data
         - Here you will find all the information regarding the dataset, with the link to the original webpage.
     
-    2. Scripts
-        - A series of python scripts that explore different methods of recommending videos, with their respective pros and cons.
+    2. Notebooks
+        - A collection of different methods to generate recommendations, showing all their pros and cons
 
     3. Src
         - A python script that collects all the necessary functions for the scripts explained above.
