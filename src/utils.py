@@ -83,47 +83,11 @@ def calculate_sentiment(data):
     
     return data
 
-
-def generate_engagement_score(data):
-
-    data['engagement_score'] = (data['like_count'] * 2 + data['comment_count'] * 3) / (data['view_count'] + 1)
-
-    # Sorting by engagement score in descending order
-    data_sorted = data.sort_values(by='engagement_score', ascending=False)
-
-    min_score = data['engagement_score'].min()
-    max_score = data['engagement_score'].max()
-
-    # Create the scaled engagement score column
-    data['scaled_engagement_score'] = 1 + 9 * ((data['engagement_score'] - min_score) / (max_score - min_score))
-
-    # Select the relevant columns and sort by scaled_engagement_score in descending order
-    data_sorted = data[['title', 'engagement_score', 'scaled_engagement_score']].sort_values(by='scaled_engagement_score', ascending=False)
-
-    channel_engagement = data.groupby('channel_name')['engagement_score'].mean().reset_index()
-    channel_engagement = channel_engagement.rename(columns={'engagement_score': 'avg_engagement_score'})
-
-    # Calculate min and max of avg_engagement_score
-    min_score_channel = channel_engagement['avg_engagement_score'].min()
-    max_score_channel = channel_engagement['avg_engagement_score'].max()
-
-    # Create the scaled average engagement score column
-    channel_engagement['scaled_avg_engagement_score'] = 1 + 9 * ((channel_engagement['avg_engagement_score'] - min_score_channel) / (max_score_channel - min_score_channel))
-
-    # Sort by avg_engagement_score in descending order
-    channel_analysis = channel_engagement.sort_values(by='avg_engagement_score', ascending=False)
-
-    return channel_analysis
-
 def initialize_data():
 
     data = download_data()
-
-    # Filter unused columns
     data = filter_columns(data)
-
-    data = generate_engagement_score(data)
-
+    data_sorted = create_engagement(data)
     return data
 
 
